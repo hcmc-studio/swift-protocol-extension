@@ -10,6 +10,9 @@ import Foundation
 public protocol ListOption: DataTransferObject {
     associatedtype Filter: ListOptionFilter
     associatedtype Order: ListOptionOrder
+    
+    var filter: Filter { get }
+    var order: Order { get }
 }
 
 public protocol ListOptionFilter: DataTransferObject {}
