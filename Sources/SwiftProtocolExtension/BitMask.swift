@@ -2,82 +2,85 @@
 //  BitMask.swift
 //  
 //
-//  Created by Ji-Hwan Kim on 2023/08/22.
+//  Created by Ji-Hwan Kim on 10/12/23.
 //
 
 import Foundation
 
-public struct BitMask<E> where E : BitMaskFlag {
-    private(set) public var value: Int
+public protocol BitMaskFlag {
+    var value: Int { get }
+}
+
+public struct BitMask<Flag>: Codable where Flag: BitMaskFlag {
+    public var value: Int
     
-    public init(_ initialValue: Int) {
-        value = initialValue
-    }
-    
-    public init(_ flags: E...) {
-        value = 0
-        for flag in flags {
-            value |= flag.value
-        }
-    }
-    
-    public func isEnabled(_ flag: E) -> Bool {
-        return (value & flag.value) != 0
-    }
-    
-    public func isDisabled(_ flag: E) -> Bool {
-        return (value & flag.value) == 0
-    }
-    
-    public subscript(_ flag: E) -> Bool {
-        get {
-            return isEnabled(flag)
-        }
-        mutating set {
-            if newValue {
-                enable(flag)
-            } else {
-                disable(flag)
-            }
-        }
-    }
-    
-    public mutating func enable(_ flag: E) {
-        value |= flag.value
-    }
-    
-    public mutating func enableIf(_ condition: Bool, _ flag: E) {
-        if condition {
-            enable(flag)
-        }
-    }
-    
-    public mutating func disable(_ flag: E) {
-        value &= ~flag.value
-    }
-    
-    public mutating func disableIf(_ condition: Bool, _ flag: E) {
-        if condition {
-            disable(flag)
-        }
-    }
-    
-    public mutating func inverse(_ flag: E) {
-        self[flag] = isDisabled(flag)
-    }
-    
-    public func toString() -> String {
-        return String(value, radix: 2)
+    public init(flags: Flag...) {
+        self.value = flags.reduce(0) { partialResult, flag in partialResult | flag.value }
     }
 }
 
-extension BitMask: Codable {
-    public init(from decoder: Decoder) throws {
-        self.init(try decoder.singleValueContainer().decode(Int.self))
+public extension BitMask {
+    func isEnabled(flag: Flag) -> Bool {
+        value & flag.value != 0
     }
     
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(value)
+    func isDisabled(flag: Flag) -> Bool {
+        value & flag.value == 0
+    }
+}
+
+public extension BitMask {
+    @discardableResult
+    mutating func set(flag: Flag, value: Bool) -> Bool {
+        let prev = isEnabled(flag: flag)
+        if value {
+            enable(flag: flag)
+        } else {
+            disable(flag: flag)
+        }
+        
+        return prev
+    }
+    
+    mutating func enable(flag: Flag) {
+        value = value | flag.value
+    }
+    
+    mutating func disable(flag: Flag) {
+        value = value ^ flag.value
+    }
+    
+    mutating func enableIf(flag: Flag, condition: Bool) {
+        enableIf(flag: flag, predicate: { _ in condition })
+    }
+    
+    mutating func enableIf(flag: Flag, predicate: (Self) -> Bool) {
+        if predicate(self) {
+            enable(flag: flag)
+        }
+    }
+    
+    mutating func disableIf(flag: Flag, condition: Bool) {
+        disableIf(flag: flag, predicate: { _ in condition })
+    }
+    
+    mutating func disableIf(flag: Flag, predicate: (Self) -> Bool) {
+        if predicate(self) {
+            disable(flag: flag)
+        }
+    }
+    
+    mutating func inverse(flag: Flag) {
+        set(flag: flag, value: isDisabled(flag: flag))
+    }
+}
+
+extension BitMask: Comparable {
+    public static func < (lhs: BitMask<Flag>, rhs: BitMask<Flag>) -> Bool {
+        lhs.value < rhs.value
+    }
+    
+    public static func == (lhs: BitMask<Flag>, rhs: BitMask<Flag>) -> Bool {
+        lhs.value == rhs.value
     }
 }

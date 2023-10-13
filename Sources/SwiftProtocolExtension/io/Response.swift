@@ -2,12 +2,12 @@
 //  Response.swift
 //  
 //
-//  Created by Ji-Hwan Kim on 2023/08/22.
+//  Created by Ji-Hwan Kim on 10/13/23.
 //
 
 import Foundation
 
-public protocol Response<Result> : DataTransferObject where Result : Codable {
+public protocol Response: DataTransferObject {
     associatedtype Result
     
     var type: ResponseType { get }
@@ -15,46 +15,42 @@ public protocol Response<Result> : DataTransferObject where Result : Codable {
     var result: Result { get }
 }
 
-public struct ResponseMetadata : Codable {
-    let acceptedAt: Date
-    let respondedAt: Date
+public enum ResponseType: String, Codable {
+    case Empty,
+         Object,
+         Array,
+         Error
 }
 
-public enum ResponseType : String, Codable {
-    case empty = "EMPTY"
-    case object = "OBJECT"
-    case array = "ARRAY"
-    case error = "ERROR"
+public struct ResponseMetadata: Codable {
+    public let acceptedAt: Date
+    public let respondedAt: Date
 }
 
-public struct EmptyResponse : Response {
-    public typealias Result = EmptyBody
-    
-    public var type: ResponseType
-    public var metadata: ResponseMetadata
-    public var result: EmptyBody
-    
-    public struct EmptyBody : Codable {}
+public struct EmptyResponseResult: Codable {}
+
+public struct EmptyResponse: Response {
+    public let type: ResponseType
+    public let metadata: ResponseMetadata
+    public let result: EmptyResponseResult
 }
 
-public struct ObjectResponse<Result> : Response where Result : Codable {
+public struct ObjectResponse<Result: Codable>: Response {
     public let type: ResponseType
     public let metadata: ResponseMetadata
     public let result: Result
 }
 
-public struct ArrayResponse<Element> : Response where Element : Codable {
-    public typealias Result = [Element]
+public struct ArrayResponse<Result: Codable>: Response {
     public let type: ResponseType
     public let metadata: ResponseMetadata
-    public let result: [Element]
+    public let result: [Result]
 }
 
-public struct ErrorResponse : Response {
-    public typealias Result = String
-    
+public struct ErrorResponse: Response {
     public let type: ResponseType
     public let metadata: ResponseMetadata
     public let result: String
     public let className: String
+    public let status: Int
 }
