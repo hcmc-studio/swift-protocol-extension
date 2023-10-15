@@ -16,4 +16,9 @@ public protocol DataTransferObjectConsumer {
 public struct EncryptedDataTransferObject: DataTransferObject {
     public let publicKey: String
     public let body: String
+    
+    public init(publicKey: String, body: String) {
+        self.publicKey = publicKey
+        self.body = body
+    }
 }
