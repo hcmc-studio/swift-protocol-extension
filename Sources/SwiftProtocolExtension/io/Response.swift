@@ -47,7 +47,7 @@ public struct ArrayResponse<Result: Codable>: Response {
     public let result: [Result]
 }
 
-public struct ErrorResponse: Response {
+public struct ErrorResponse: Response, Error {
     public let type: ResponseType
     public let metadata: ResponseMetadata
     public let result: String
