@@ -41,10 +41,25 @@ public struct NumericElement: ListOptionFilterElementPrimitive {
     public let greaterEq: Int?
     public let inList: [Int]?
     public let notInList: [Int]?
+    
+    public init(eq: Int? = nil, neq: Int? = nil, less: Int? = nil, lessEq: Int? = nil, greater: Int? = nil, greaterEq: Int? = nil, inList: [Int]? = nil, notInList: [Int]? = nil) {
+        self.eq = eq
+        self.neq = neq
+        self.less = less
+        self.lessEq = lessEq
+        self.greater = greater
+        self.greaterEq = greaterEq
+        self.inList = inList
+        self.notInList = notInList
+    }
 }
 
 public struct BoolElement: ListOptionFilterElement {
-    let eq: Bool?
+    public let eq: Bool?
+    
+    init(eq: Bool? = nil) {
+        self.eq = eq
+    }
 }
 
 public struct StringElement: ListOptionFilterElementPrimitive {
@@ -58,6 +73,19 @@ public struct StringElement: ListOptionFilterElementPrimitive {
     public let notLike: String?
     public let inList: [String]?
     public let notInList: [String]?
+    
+    public init(eq: String? = nil, neq: String? = nil, less: String? = nil, lessEq: String? = nil, greater: String? = nil, greaterEq: String? = nil, like: String? = nil, notLike: String? = nil, inList: [String]? = nil, notInList: [String]? = nil) {
+        self.eq = eq
+        self.neq = neq
+        self.less = less
+        self.lessEq = lessEq
+        self.greater = greater
+        self.greaterEq = greaterEq
+        self.like = like
+        self.notLike = notLike
+        self.inList = inList
+        self.notInList = notInList
+    }
 }
 
 public struct DateElement: ListOptionFilterElementPrimitive {
@@ -69,6 +97,17 @@ public struct DateElement: ListOptionFilterElementPrimitive {
     public let greaterEq: String?
     public let inList: [String]?
     public let notInList: [String]?
+    
+    public init(eq: String? = nil, neq: String? = nil, less: String? = nil, lessEq: String? = nil, greater: String? = nil, greaterEq: String? = nil, inList: [String]? = nil, notInList: [String]? = nil) {
+        self.eq = eq
+        self.neq = neq
+        self.less = less
+        self.lessEq = lessEq
+        self.greater = greater
+        self.greaterEq = greaterEq
+        self.inList = inList
+        self.notInList = notInList
+    }
 }
 
 public struct BitMaskElement<Flag: BitMaskFlag>: ListOptionFilterElement {
@@ -77,6 +116,14 @@ public struct BitMaskElement<Flag: BitMaskFlag>: ListOptionFilterElement {
     public let includeAll: BitMask<Flag>?
     public let includeAny: BitMask<Flag>?
     public let excludeAll: BitMask<Flag>?
+    
+    public init(eq: BitMask<Flag>? = nil, neq: BitMask<Flag>? = nil, includeAll: BitMask<Flag>? = nil, includeAny: BitMask<Flag>? = nil, excludeAll: BitMask<Flag>? = nil) {
+        self.eq = eq
+        self.neq = neq
+        self.includeAll = includeAll
+        self.includeAny = includeAny
+        self.excludeAll = excludeAll
+    }
 }
 
 public struct EnumElement<Enum: Codable>: ListOptionFilterElement {
@@ -84,6 +131,13 @@ public struct EnumElement<Enum: Codable>: ListOptionFilterElement {
     public let neq: Enum?
     public let inList: [Enum]?
     public let notInList: [Enum]?
+    
+    public init(eq: Enum? = nil, neq: Enum? = nil, inList: [Enum]? = nil, notInList: [Enum]? = nil) {
+        self.eq = eq
+        self.neq = neq
+        self.inList = inList
+        self.notInList = notInList
+    }
 }
 
 public protocol ListOptionOrder: DataTransferObject {}
