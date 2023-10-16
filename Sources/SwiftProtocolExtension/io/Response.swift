@@ -25,6 +25,11 @@ public enum ResponseType: String, Codable {
 public struct ResponseMetadata: Codable {
     public let acceptedAt: Date
     public let respondedAt: Date
+    
+    public init(acceptedAt: Date, respondedAt: Date) {
+        self.acceptedAt = acceptedAt
+        self.respondedAt = respondedAt
+    }
 }
 
 public struct EmptyResponseResult: Codable {}
@@ -33,18 +38,36 @@ public struct EmptyResponse: Response {
     public let type: ResponseType
     public let metadata: ResponseMetadata
     public let result: EmptyResponseResult
+    
+    public init(type: ResponseType, metadata: ResponseMetadata, result: EmptyResponseResult) {
+        self.type = type
+        self.metadata = metadata
+        self.result = result
+    }
 }
 
 public struct ObjectResponse<Result: Codable>: Response {
     public let type: ResponseType
     public let metadata: ResponseMetadata
     public let result: Result
+    
+    public init(type: ResponseType, metadata: ResponseMetadata, result: Result) {
+        self.type = type
+        self.metadata = metadata
+        self.result = result
+    }
 }
 
 public struct ArrayResponse<Result: Codable>: Response {
     public let type: ResponseType
     public let metadata: ResponseMetadata
     public let result: [Result]
+    
+    public init(type: ResponseType, metadata: ResponseMetadata, result: [Result]) {
+        self.type = type
+        self.metadata = metadata
+        self.result = result
+    }
 }
 
 public struct ErrorResponse: Response, Error {
@@ -53,4 +76,12 @@ public struct ErrorResponse: Response, Error {
     public let result: String
     public let className: String
     public let status: Int
+    
+    public init(type: ResponseType, metadata: ResponseMetadata, result: String, className: String, status: Int) {
+        self.type = type
+        self.metadata = metadata
+        self.result = result
+        self.className = className
+        self.status = status
+    }
 }
