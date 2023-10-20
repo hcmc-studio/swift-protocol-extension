@@ -17,7 +17,10 @@ public protocol ListOption: DataTransferObject {
 
 public protocol ListOptionFilter: DataTransferObject {}
 
-public protocol ListOptionFilterElement: Codable {}
+public protocol ListOptionFilterElement: Codable {
+    var isNull: Bool? { get }
+    var isNotNull: Bool? { get }
+}
 
 public protocol ListOptionFilterElementPrimitive: ListOptionFilterElement {
     associatedtype T
@@ -30,6 +33,8 @@ public protocol ListOptionFilterElementPrimitive: ListOptionFilterElement {
     var greaterEq: T? { get }
     var inList: [T]? { get }
     var notInList: [T]? { get }
+    var isNull: Bool? { get }
+    var isNotNull: Bool? { get }
 }
 
 public struct NumericElement: ListOptionFilterElementPrimitive {
@@ -41,8 +46,10 @@ public struct NumericElement: ListOptionFilterElementPrimitive {
     public let greaterEq: Int?
     public let inList: [Int]?
     public let notInList: [Int]?
+    public let isNull: Bool?
+    public let isNotNull: Bool?
     
-    public init(eq: Int? = nil, neq: Int? = nil, less: Int? = nil, lessEq: Int? = nil, greater: Int? = nil, greaterEq: Int? = nil, inList: [Int]? = nil, notInList: [Int]? = nil) {
+    public init(eq: Int? = nil, neq: Int? = nil, less: Int? = nil, lessEq: Int? = nil, greater: Int? = nil, greaterEq: Int? = nil, inList: [Int]? = nil, notInList: [Int]? = nil, isNull: Bool? = nil, isNotNull: Bool? = nil) {
         self.eq = eq
         self.neq = neq
         self.less = less
@@ -51,14 +58,20 @@ public struct NumericElement: ListOptionFilterElementPrimitive {
         self.greaterEq = greaterEq
         self.inList = inList
         self.notInList = notInList
+        self.isNull = isNull
+        self.isNotNull = isNotNull
     }
 }
 
 public struct BoolElement: ListOptionFilterElement {
     public let eq: Bool?
+    public let isNull: Bool?
+    public let isNotNull: Bool?
     
-    init(eq: Bool? = nil) {
+    init(eq: Bool? = nil, isNull: Bool? = nil, isNotNull: Bool? = nil) {
         self.eq = eq
+        self.isNull = isNull
+        self.isNotNull = isNotNull
     }
 }
 
@@ -73,8 +86,10 @@ public struct StringElement: ListOptionFilterElementPrimitive {
     public let notLike: String?
     public let inList: [String]?
     public let notInList: [String]?
+    public let isNull: Bool?
+    public let isNotNull: Bool?
     
-    public init(eq: String? = nil, neq: String? = nil, less: String? = nil, lessEq: String? = nil, greater: String? = nil, greaterEq: String? = nil, like: String? = nil, notLike: String? = nil, inList: [String]? = nil, notInList: [String]? = nil) {
+    public init(eq: String? = nil, neq: String? = nil, less: String? = nil, lessEq: String? = nil, greater: String? = nil, greaterEq: String? = nil, like: String? = nil, notLike: String? = nil, inList: [String]? = nil, notInList: [String]? = nil, isNull: Bool? = nil, isNotNull: Bool? = nil) {
         self.eq = eq
         self.neq = neq
         self.less = less
@@ -85,6 +100,8 @@ public struct StringElement: ListOptionFilterElementPrimitive {
         self.notLike = notLike
         self.inList = inList
         self.notInList = notInList
+        self.isNull = isNull
+        self.isNotNull = isNotNull
     }
 }
 
@@ -97,8 +114,10 @@ public struct DateElement: ListOptionFilterElementPrimitive {
     public let greaterEq: String?
     public let inList: [String]?
     public let notInList: [String]?
+    public let isNull: Bool?
+    public let isNotNull: Bool?
     
-    public init(eq: String? = nil, neq: String? = nil, less: String? = nil, lessEq: String? = nil, greater: String? = nil, greaterEq: String? = nil, inList: [String]? = nil, notInList: [String]? = nil) {
+    public init(eq: String? = nil, neq: String? = nil, less: String? = nil, lessEq: String? = nil, greater: String? = nil, greaterEq: String? = nil, inList: [String]? = nil, notInList: [String]? = nil, isNull: Bool? = nil, isNotNull: Bool? = nil) {
         self.eq = eq
         self.neq = neq
         self.less = less
@@ -107,6 +126,8 @@ public struct DateElement: ListOptionFilterElementPrimitive {
         self.greaterEq = greaterEq
         self.inList = inList
         self.notInList = notInList
+        self.isNull = isNull
+        self.isNotNull = isNotNull
     }
 }
 
@@ -116,13 +137,17 @@ public struct BitMaskElement<Flag: BitMaskFlag>: ListOptionFilterElement {
     public let includeAll: BitMask<Flag>?
     public let includeAny: BitMask<Flag>?
     public let excludeAll: BitMask<Flag>?
+    public let isNull: Bool?
+    public let isNotNull: Bool?
     
-    public init(eq: BitMask<Flag>? = nil, neq: BitMask<Flag>? = nil, includeAll: BitMask<Flag>? = nil, includeAny: BitMask<Flag>? = nil, excludeAll: BitMask<Flag>? = nil) {
+    public init(eq: BitMask<Flag>? = nil, neq: BitMask<Flag>? = nil, includeAll: BitMask<Flag>? = nil, includeAny: BitMask<Flag>? = nil, excludeAll: BitMask<Flag>? = nil, isNull: Bool? = nil, isNotNull: Bool? = nil) {
         self.eq = eq
         self.neq = neq
         self.includeAll = includeAll
         self.includeAny = includeAny
         self.excludeAll = excludeAll
+        self.isNull = isNull
+        self.isNotNull = isNotNull
     }
 }
 
@@ -131,12 +156,16 @@ public struct EnumElement<Enum: Codable>: ListOptionFilterElement {
     public let neq: Enum?
     public let inList: [Enum]?
     public let notInList: [Enum]?
+    public let isNull: Bool?
+    public let isNotNull: Bool?
     
-    public init(eq: Enum? = nil, neq: Enum? = nil, inList: [Enum]? = nil, notInList: [Enum]? = nil) {
+    public init(eq: Enum? = nil, neq: Enum? = nil, inList: [Enum]? = nil, notInList: [Enum]? = nil, isNull: Bool? = nil, isNotNull: Bool? = nil) {
         self.eq = eq
         self.neq = neq
         self.inList = inList
         self.notInList = notInList
+        self.isNull = isNull
+        self.isNotNull = isNotNull
     }
 }
 
