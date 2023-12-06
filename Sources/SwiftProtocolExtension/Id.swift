@@ -7,8 +7,8 @@
 
 import Foundation
 
-public protocol Id: Codable {
-    associatedtype Value: Codable
+public protocol Id: Codable, CustomStringConvertible {
+    associatedtype Value: Codable, CustomStringConvertible
     
     var value: Value { get }
     
@@ -16,6 +16,8 @@ public protocol Id: Codable {
 }
 
 extension Id {
+    public var description: String { .init(describing: value) }
+    
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let value = try container.decode(Value.self)
