@@ -20,3 +20,17 @@ public extension Sequence where Element: ValueObjectConverter {
         map { $0.toValueObject() }
     }
 }
+
+public protocol VerboseValueObject: ValueObject {}
+
+public protocol VerboseValueObjectConverter {
+    associatedtype VVO: VerboseValueObject
+    
+    func toVerboseValueObject() -> VVO
+}
+
+public extension Sequence where Element: VerboseValueObjectConverter {
+    func toVerboseValueObjects() -> [Element.VVO] {
+        map { $0.toVerboseValueObject() }
+    }
+}
