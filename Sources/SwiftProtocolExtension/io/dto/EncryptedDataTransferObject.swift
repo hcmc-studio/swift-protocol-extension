@@ -1,17 +1,11 @@
 //
-//  DataTransferObject.swift
-//  
+//  EncryptedDataTransferObject.swift
 //
-//  Created by Ji-Hwan Kim on 10/12/23.
+//
+//  Created by Ji-Hwan Kim on 1/23/24.
 //
 
 import Foundation
-
-public protocol DataTransferObject: Codable {}
-
-public protocol DataTransferObjectConsumer {
-    associatedtype DTO where DTO: DataTransferObject
-}
 
 public struct EncryptedDataTransferObject: DataTransferObject {
     public let publicKey: String

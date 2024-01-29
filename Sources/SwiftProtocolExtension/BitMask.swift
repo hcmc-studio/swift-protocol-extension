@@ -7,10 +7,6 @@
 
 import Foundation
 
-public protocol BitMaskFlag {
-    var value: Int { get }
-}
-
 public struct BitMask<Flag> where Flag: BitMaskFlag {
     public var value: Int
     
