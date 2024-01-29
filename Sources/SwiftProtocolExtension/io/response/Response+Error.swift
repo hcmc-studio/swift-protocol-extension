@@ -12,7 +12,11 @@ public struct ErrorResponse: Response, Error {
     public let metadata: ResponseMetadata
     public let result: SerializableThrowable
     
-    public init(type: ResponseType, metadata: ResponseMetadata, result: SerializableThrowable) {
+    public init(
+        type: ResponseType,
+        metadata: ResponseMetadata,
+        result: SerializableThrowable
+    ) {
         self.type = type
         self.metadata = metadata
         self.result = result
@@ -26,7 +30,12 @@ public class SerializableThrowable: Codable, Error {
     public let cause: SerializableThrowable?
     public let stackTrace: [SerializableStackTraceElement]
     
-    public init(originalClassName: String?, message: String?, cause: SerializableThrowable?, stackTrace: [SerializableStackTraceElement]) {
+    public init(
+        originalClassName: String?,
+        message: String?,
+        cause: SerializableThrowable?,
+        stackTrace: [SerializableStackTraceElement]
+    ) {
         self.originalClassName = originalClassName
         self.message = message
         self.cause = cause
@@ -44,7 +53,16 @@ public struct SerializableStackTraceElement: Codable {
     public let methodName: String?
     public let isNativeMethod: Bool
     
-    public init(fileName: String?, lineNumber: Int, moduleName: String?, moduleVersion: String?, classLoaderName: String?, className: String?, methodName: String?, isNativeMethod: Bool) {
+    public init(
+        fileName: String?,
+        lineNumber: Int,
+        moduleName: String?,
+        moduleVersion: String?,
+        classLoaderName: String?,
+        className: String?,
+        methodName: String?,
+        isNativeMethod: Bool
+    ) {
         self.fileName = fileName
         self.lineNumber = lineNumber
         self.moduleName = moduleName
