@@ -7,7 +7,11 @@
 
 import Foundation
 
-public struct BitMask<Flag> where Flag: BitMaskFlag {
+public protocol BitMaskProtocol {
+    var value: Int { get }
+}
+
+public struct BitMask<Flag> : BitMaskProtocol where Flag: BitMaskFlag {
     public var value: Int
     
     public init(flags: Flag...) {
@@ -72,6 +76,43 @@ extension BitMask {
     
     public mutating func inverse(flag: Flag) {
         set(flag: flag, value: isDisabled(flag: flag))
+    }
+}
+
+extension BitMask {
+    public func enabling(flag: Flag) -> Self {
+        var mutable = self
+        mutable.enable(flag: flag)
+        
+        return mutable
+    }
+    
+    public func disabling(flag: Flag) -> Self {
+        var mutable = self
+        mutable.disable(flag: flag)
+        
+        return mutable
+    }
+    
+    public func enablingIf(flag: Flag, condition: @autoclosure () -> Bool) -> Self {
+        var mutable = self
+        mutable.enableIf(flag: flag, condition: condition())
+        
+        return mutable
+    }
+    
+    private func disablingIf(flag: Flag, condition: @autoclosure () -> Bool) -> Self {
+        var mutable = self
+        mutable.disableIf(flag: flag, condition: condition())
+        
+        return mutable
+    }
+    
+    public func inversing(flag: Flag) -> Self {
+        var mutable = self
+        mutable.inverse(flag: flag)
+        
+        return mutable
     }
 }
 

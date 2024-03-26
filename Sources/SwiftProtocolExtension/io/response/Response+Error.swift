@@ -24,11 +24,13 @@ public struct ErrorResponse: Response, Error {
 }
 
 /// 직렬화, 역직렬화 할 수 있는 Java Throwable
-public class SerializableThrowable: Codable, Error {
+public class SerializableThrowable: Codable, Error, CustomStringConvertible {
     public let originalClassName: String?
     public let message: String?
     public let cause: SerializableThrowable?
     public let stackTrace: [SerializableStackTraceElement]
+    
+    public var description: String { originalClassName ?? "<nil>" }
     
     public init(
         originalClassName: String?,
